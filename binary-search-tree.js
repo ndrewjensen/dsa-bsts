@@ -19,6 +19,8 @@ class BinarySearchTree {
       this.root = new Node(val);
       return;
     }
+
+
     let toVisitStack = [this.root];
     while (toVisitStack.length) {
       let current = toVisitStack.pop();
@@ -58,15 +60,13 @@ class BinarySearchTree {
         return this;
       }
       return this.insertRecursively(val, node.left);
-    };
-
-    if (val > node.val) {
+    } else {
       if (!node.right) {
         node.right = new Node(val);
         return;
       }
       return this.insertRecursively(val, node.right);
-    };
+    }
   }
 
   /** find(val): Search the tree for a node with value val.
@@ -103,38 +103,92 @@ class BinarySearchTree {
    * Return an array of visited nodes. */
 
   dfsPreOrder(node = this.root, final = []) {
-    if (!node) return final;
-    final.push(node.val);
-    node.left && this.dfsPreOrder(node.left, final);
-    node.right && this.dfsPreOrder(node.right, final);
+    if (node) {
+      final.push(node.val);
+      node.left && this.dfsPreOrder(node.left, final);
+      node.right && this.dfsPreOrder(node.right, final);
+    }
     return final;
-   }
+  }
 
   /** dfsInOrder(): Traverse the array using in-order DFS.
    * Return an array of visited nodes. */
 
-  dfsInOrder() { }
+  dfsInOrder(node = this.root, final = []) {
+    if (node) {
+      node.left && this.dfsInOrder(node.left, final);
+      final.push(node.val);
+      node.right && this.dfsInOrder(node.right, final);
+    }
+    return final;
+  }
 
   /** dfsPostOrder(): Traverse the array using post-order DFS.
    * Return an array of visited nodes. */
 
-  dfsPostOrder() { }
+  dfsPostOrder(node = this.root, final = []) {
+    if (node) {
+      node.left && this.dfsPostOrder(node.left, final);
+      node.right && this.dfsPostOrder(node.right, final);
+      final.push(node.val);
+    }
+    return final;
+  }
 
   /** bfs(): Traverse the array using BFS.
-   * Return an array of visited nodes. */
+   * non-recursive 
+  * Return an array of visited nodes. */
 
-  bfs() { }
+  // bfs() {
+  //   if (!this.root) return [];
+  //   let toVisit = [this.root];
+  //   let final = [];
+
+  //   while (toVisit.length) {
+  //     let nextGeneration = [];
+  //     for (let n of toVisit) {
+  //       final.push(n.val);
+  //       n.left && nextGeneration.push(n.left);
+  //       n.right && nextGeneration.push(n.right);
+  //     }
+  //     toVisit = nextGeneration;
+  //   }
+  //   return final;
+  // }
+
+    /** bfs(): Traverse the array using BFS.
+   * Recursive 
+  * Return an array of visited nodes. */
+
+  bfs(final = [],toVisit=[this.root]) {
+    if (!this.root) return [];
+    let nextGeneration = [];
+    for (let n of toVisit) {
+      final.push(n.val);
+      n.left && nextGeneration.push(n.left);
+      n.right && nextGeneration.push(n.right);
+    }
+    nextGeneration.length && this.bfs(final,nextGeneration)
+    return final;
+  }
 
   /** findSuccessorNode(): Find the node with the next largest value.
    * Return successor node or undefined if not found. */
 
-  findSuccessorNode(node) { }
+  findSuccessorNode(node) {
+    if (!node.right) return
+    let successor = node.right
+    while (successor.left) {
+      successor = successor.left
+    }
+    return successor
+  }
 
   /** Further Study!
    * remove(val): Removes a node in the BST with the value val.
    * Returns the removed node. */
 
-  remove(val) { }
+  remove(val) {}
 }
 
 module.exports = {
